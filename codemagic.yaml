@@ -11,7 +11,7 @@ workflows:
       - name: List schemes
         script: xcodebuild -project SakuraPlanner.xcodeproj -list
       - name: Build
-        script: xcodebuild -project SakuraPlanner.xcodeproj -scheme SakuraPlanner -configuration Release -sdk iphoneos -derived-data build/derived build
+        script: xcodebuild -project SakuraPlanner.xcodeproj -scheme SakuraPlanner -configuration Release -sdk iphoneos -derivedDataPath build/derived build
       - name: Package IPA
         script: |
           set -e
