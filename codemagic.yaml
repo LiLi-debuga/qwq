@@ -3,8 +3,6 @@ workflows:
     name: Build Unsigned IPA
     triggering:
       events: [push]
-      branch:
-        only: [main]
     scripts:
       - name: Install XcodeGen
         script: brew install xcodegen
@@ -12,6 +10,7 @@ workflows:
         script: xcodegen generate
       - name: Build
         script: |
+          set -e
           xcodebuild \
             -project SakuraPlanner.xcodeproj \
             -scheme SakuraPlanner \
@@ -23,5 +22,14 @@ workflows:
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM="" \
             build
+      - name: Package IPA
+        script: |
+          set -e
+          APP_PATH=$(find build/derived/Build/Products -name "*.app" | head -n1)
+          mkdir -p build/ipa/Payload
+          cp -R "$APP_PATH" build/ipa/Payload/
+          cd build/ipa
+          zip -r SakuraPlanner.ipa Payload
+          ls -la
     artifacts:
       - build/ipa/*.ipa
