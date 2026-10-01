@@ -1,0 +1,27 @@
+workflows:
+  ios-unsigned-ipa:
+    name: Build Unsigned IPA
+    triggering:
+      events: [push]
+      branch:
+        only: [main]
+    scripts:
+      - name: Install XcodeGen
+        script: brew install xcodegen
+      - name: Generate Xcode project
+        script: xcodegen generate
+      - name: Build
+        script: |
+          xcodebuild \
+            -project SakuraPlanner.xcodeproj \
+            -scheme SakuraPlanner \
+            -configuration Release \
+            -sdk iphoneos \
+            -derived-data build/derived \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            build
+    artifacts:
+      - build/ipa/*.ipa
