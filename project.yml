@@ -9,6 +9,15 @@ targets:
     platform: iOS
     sources:
       - path: SakuraPlanner
+    info:
+      path: SakuraPlanner/Info.plist
+      properties:
+        CFBundleDisplayName: 小樱大作战
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UIBackgroundModes: [fetch, remote-notification]
+        NSLocalNotificationUsageDescription: "需要通知权限提醒你做事"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.xiaoba.sakuraplanner
