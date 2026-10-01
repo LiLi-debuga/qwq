@@ -2,7 +2,7 @@ name: SakuraPlanner
 options:
   bundleIdPrefix: com.xiaoba
   deploymentTarget:
-    iOS: "15.0"
+    iOS: "16.0"
 targets:
   SakuraPlanner:
     type: application
