@@ -12,14 +12,6 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.xiaoba.sakuraplanner
-        PRODUCT_NAME: 小樱大作战
-        MARKETING_VERSION: "1.0"
-        CURRENT_PROJECT_VERSION: "1"
-        DEVELOPMENT_TEAM: ""
-        CODE_SIGNING_REQUIRED: "NO"
+        PRODUCT_NAME: SakuraPlanner
         CODE_SIGNING_ALLOWED: "NO"
-        CODE_SIGN_IDENTITY: ""
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait"
-        INFOPLIST_KEY_NSHumanUsageDescription: ""
-        INFOPLIST_KEY_UIBackgroundModes: "fetch"
+        CODE_SIGNING_REQUIRED: "NO"

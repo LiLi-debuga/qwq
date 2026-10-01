@@ -6,26 +6,17 @@ workflows:
     scripts:
       - name: Install XcodeGen
         script: brew install xcodegen
-      - name: Generate Xcode project
+      - name: Generate project
         script: xcodegen generate
+      - name: List schemes
+        script: xcodebuild -project SakuraPlanner.xcodeproj -list
       - name: Build
-        script: |
-          set -e
-          xcodebuild \
-            -project SakuraPlanner.xcodeproj \
-            -scheme SakuraPlanner \
-            -configuration Release \
-            -sdk iphoneos \
-            -derived-data build/derived \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="" \
-            build
+        script: set -o pipefail && xcodebuild -project SakuraPlanner.xcodeproj -scheme SakuraPlanner -configuration Release -sdk iphoneos -derived-data build/derived CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" DEVELOPMENT_TEAM="" build | xcpretty
       - name: Package IPA
         script: |
           set -e
           APP_PATH=$(find build/derived/Build/Products -name "*.app" | head -n1)
+          echo "Found app: $APP_PATH"
           mkdir -p build/ipa/Payload
           cp -R "$APP_PATH" build/ipa/Payload/
           cd build/ipa
