@@ -1,0 +1,44 @@
+name: Build unsigned IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build for iOS (unsigned)
+        run: |
+          xcodebuild \
+            -project SakuraPlanner.xcodeproj \
+            -scheme SakuraPlanner \
+            -configuration Release \
+            -sdk iphoneos \
+            -derived-data build/derived \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            build
+
+      - name: Package IPA
+        run: |
+          APP_PATH=$(find build/derived/Build/Products -name "*.app" | head -n1)
+          mkdir -p build/ipa/Payload
+          cp -R "$APP_PATH" build/ipa/Payload/
+          cd build/ipa
+          zip -r 小樱大作战.ipa Payload
+          ls -la
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SakuraPlanner-IPA
+          path: build/ipa/小樱大作战.ipa
