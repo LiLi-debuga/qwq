@@ -8,6 +8,9 @@ struct ContentView: View {
     @State private var pickMinute = 0
     @State private var repeatDaily = false
     @State private var showTimePicker = false
+    @State private var updateAlert = false
+    @State private var updateURL = ""
+    @State private var updateNotes = ""
 
     var body: some View {
         NavigationView {
@@ -23,7 +26,33 @@ struct ContentView: View {
             .background(Color(red: 1.0, green: 0.96, blue: 0.97).ignoresSafeArea())
             .navigationBarHidden(true)
         }
-        .onAppear { store.checkPetDeath() }
+        .onAppear { store.checkPetDeath(); checkUpdate() }
+        .alert("发现新版本", isPresented: $updateAlert) {
+            Button("去下载") {
+                if let url = URL(string: updateURL) { UIApplication.shared.open(url) }
+            }
+            Button("以后再说", role: .cancel) {}
+        } message: {
+            Text(updateNotes)
+        }
+    }
+
+    func checkUpdate() {
+        guard let url = URL(string: "https://qwqroom.qd.je/ota/version.json") else { return }
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            guard let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let ios = json["ios"] as? [String: Any],
+                  let latest = ios["versionCode"] as? Int,
+                  let urlStr = ios["url"] as? String,
+                  let notes = ios["notes"] as? String,
+                  latest > 1 else { return }
+            DispatchQueue.main.async {
+                self.updateURL = urlStr
+                self.updateNotes = notes
+                self.updateAlert = true
+            }
+        }.resume()
     }
 
     var banner: some View {
